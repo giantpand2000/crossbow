@@ -27,7 +27,7 @@ pub fn cargo_rustc_command(
         cargo.arg("--release");
     };
     for feature in features.iter() {
-        cargo.args(&["--feature", feature]);
+        cargo.args(&["--features", feature]);
     }
     if all_features {
         cargo.arg("--all-features");
