@@ -50,6 +50,10 @@ pub fn gen_minimal_info_plist(
             ]),
             ..Default::default()
         },
+        background_execution: BackgroundExecution {
+            ui_device_family: Some(vec![1, 2]),
+            ..Default::default()
+        },
         ..Default::default()
     }
 }
