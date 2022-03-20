@@ -28,6 +28,8 @@ pub struct AppleBuildCommand {
     /// The id of the identity used for signing. It won't start the signing process until you provide this flag
     #[clap(long)]
     pub identity: Option<String>,
+    #[clap(long)]
+    pub bundle_identifier: Option<String>,
 }
 
 impl AppleBuildCommand {
@@ -51,7 +53,20 @@ impl AppleBuildCommand {
         } else {
             (Target::Bin(context.package_name()), context.package_name())
         };
-        let properties = context.gen_info_plist(&package_name)?;
+        let properties = {
+            let mut props = context.gen_info_plist(&package_name)?;
+            if matches!(target, Target::Example(_)) {
+                if let Some(bundle_config) = &context.metadata.bundle.example.get(&package_name) {
+                    if let Some(id) = bundle_config.identifier.as_ref() {
+                        props.identification.bundle_identifier = id.clone();
+                    }
+                }
+            }
+            if let Some(id ) = self.bundle_identifier.as_ref() {
+                props.identification.bundle_identifier = id.clone();
+            }
+            props
+        };
         config.status_message("Starting build process", &package_name)?;
         config.status("Compiling app")?;
         let build_targets = context.apple_build_targets(&self.target);

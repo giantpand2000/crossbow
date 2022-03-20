@@ -39,4 +39,17 @@ pub struct Metadata {
     /// TODO: Add android android_uses_features.
     #[serde(default)]
     pub android_permissions: Vec<UsesPermission>,
+
+    #[serde(default)]
+    pub bundle: BundleConfig,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct TargetConfig {
+    pub identifier:Option<String>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize, Default)]
+pub struct BundleConfig {
+    pub example: std::collections::HashMap<String, TargetConfig>,
 }
