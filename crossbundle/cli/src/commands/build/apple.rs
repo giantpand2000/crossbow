@@ -85,6 +85,7 @@ impl AppleBuildCommand {
     ) -> Result<PathBuf> {
         let rust_triple = build_target.rust_triple();
         config.status_message("Compiling for architecture", rust_triple)?;
+        let is_example = matches!(target, Target::Example(_));
         apple::compile_rust_for_ios(
             target,
             build_target,
@@ -94,7 +95,14 @@ impl AppleBuildCommand {
             self.shared.all_features,
             self.shared.no_default_features,
         )?;
-        let out_dir = context.target_dir.join(rust_triple).join(&profile);
+        let out_dir = {
+            let out_dir = context.target_dir.join(rust_triple).join(&profile);
+            if is_example {
+                out_dir.join("examples")
+            } else {
+                out_dir
+            }
+        };
         let bin_path = out_dir.join(&name);
         config.status("Generating app folder")?;
         let apple_target_dir = &context
