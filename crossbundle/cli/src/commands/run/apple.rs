@@ -15,10 +15,10 @@ pub struct AppleRunCommand {
     #[clap(short, long)]
     pub debug: bool,
     /// Install and launch on the connected device
-    #[clap(short, long, conflicts_with = "target")]
+    #[clap(long, conflicts_with = "target")]
     pub device: bool,
     /// Connected device id
-    #[clap(short = 'D', long, conflicts_with = "device_name")]
+    #[clap(short = 'D', long, conflicts_with = "simulator-name")]
     pub device_id: Option<String>,
 }
 
